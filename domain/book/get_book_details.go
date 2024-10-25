@@ -8,7 +8,6 @@ import (
 
 func (s service) GetBookDetailsMap(ctx context.Context, req model.GetBookDetailsReq) (model.BookDetailsMap, error) {
 	books, err := s.repo.GetBookDetails(ctx, req.IDs)
-
 	if err != nil {
 		return nil, err
 	}

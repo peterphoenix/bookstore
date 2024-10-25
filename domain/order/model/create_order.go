@@ -5,6 +5,11 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+const (
+	EmptyItemErr = "item cannot be empty"
+	ZeroQtyErr   = "qty must be greater than zero"
+)
+
 type CreateOrderItemReq struct {
 	BookID string `json:"book_id"`
 	Qty    uint   `json:"qty"`
@@ -36,9 +41,13 @@ type CreateOrderInput struct {
 }
 
 func (req *CreateOrderReq) Validate() error {
+	if len(req.Items) == 0 {
+		return errors.New(EmptyItemErr)
+	}
+
 	for _, item := range req.Items {
 		if item.Qty == 0 {
-			return errors.New("qty must be greater than zero")
+			return errors.New(ZeroQtyErr)
 		}
 	}
 	return nil

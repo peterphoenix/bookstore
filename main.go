@@ -11,6 +11,9 @@ import (
 	"time"
 
 	"bookstore/docs"
+	bookRepo "bookstore/domain/book/repository"
+	orderRepo "bookstore/domain/order/repository"
+	userRepo "bookstore/domain/user/repository"
 	httpSwagger "github.com/swaggo/http-swagger"
 
 	"bookstore/config"
@@ -35,9 +38,9 @@ func main() {
 		log.Fatalf("failed to connect to database: %s\n", err)
 	}
 
-	userSvc := user.NewService(db)
-	bookSvc := book.NewService(db)
-	orderSvc := order.NewService(db)
+	userSvc := user.NewService(userRepo.NewRepository(db))
+	bookSvc := book.NewService(bookRepo.NewRepository(db))
+	orderSvc := order.NewService(orderRepo.NewRepository(db))
 
 	h := handler.NewHandler(userSvc, bookSvc, orderSvc)
 	docs.SwaggerInfo.Host = cfg.Host

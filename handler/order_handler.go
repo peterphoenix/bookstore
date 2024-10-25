@@ -36,6 +36,7 @@ func (h *handler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 			Code: respond.CodeUnauthorized,
 			Desc: respond.CodeUnauthorized,
 		}, http.StatusUnauthorized)
+		return
 	}
 	ctx = contextutil.WithUserID(ctx, userId)
 

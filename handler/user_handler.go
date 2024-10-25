@@ -16,15 +16,15 @@ import (
 // @Tags		User
 // @Accept		json
 // @Produce		json
-// @Param		request body model.UserCreateReq true "body"
-// @Success		200 {object} 	respond.APIModel[model.UserCreateRes]
+// @Param		request body model.CreateUserReq true "body"
+// @Success		200 {object} 	respond.APIModel[model.CreateUserRes]
 // @Failure		400	{object}	respond.APIModel[string]
 // @Failure		500 {object} 	respond.APIModel[string]
 // @Router		/user [post]
 func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	var input model.UserCreateReq
+	var input model.CreateUserReq
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		respond.Error(w, ctx, respond.APIError{
@@ -46,7 +46,7 @@ func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	res, err := h.UserSvc.CreateUser(ctx, input)
 	if err != nil {
 		if strings.Contains(err.Error(), "user_email_key") {
-			err = errors.New("email key already exists")
+			err = errors.New("email already exist")
 			respond.Error(w, ctx, respond.APIError{
 				Code: respond.CodeInvalidRequest,
 				Desc: err.Error(),

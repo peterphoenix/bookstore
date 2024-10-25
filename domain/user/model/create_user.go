@@ -6,7 +6,13 @@ import (
 	"github.com/pkg/errors"
 )
 
-type UserCreateReq struct {
+const (
+	InvalidPasswordErr = "password must be at least 8 characters long"
+	InvalidEmailErr    = "invalid email format"
+	InvalidPhoneErr    = "invalid phone number format"
+)
+
+type CreateUserReq struct {
 	Email       string `json:"email"`
 	Name        string `json:"name"`
 	Password    string `json:"pass"`
@@ -18,7 +24,7 @@ type UserCreateReq struct {
 	Country     string `json:"country"`
 }
 
-type UserCreateRes struct {
+type CreateUserRes struct {
 	ID    string `json:"id"`
 	Email string `json:"email"`
 	Name  string `json:"name"`
@@ -37,13 +43,13 @@ type CreateUserInput struct {
 	Country        string
 }
 
-func (req *UserCreateReq) Validate() error {
+func (req *CreateUserReq) Validate() error {
 	if err := validateEmail(req.Email); err != nil {
 		return err
 	}
 
 	if len(req.Password) < 8 {
-		return errors.New("password must be at least 8 characters long")
+		return errors.New(InvalidPasswordErr)
 	}
 
 	if req.PhoneNumber != "" {
@@ -58,7 +64,7 @@ func (req *UserCreateReq) Validate() error {
 func validateEmail(email string) error {
 	var emailRegex = regexp.MustCompile(`^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$`)
 	if !emailRegex.MatchString(email) {
-		return errors.New("invalid email format")
+		return errors.New(InvalidEmailErr)
 	}
 	return nil
 }
@@ -66,7 +72,7 @@ func validateEmail(email string) error {
 func validatePhoneNumber(phone string) error {
 	var phoneRegex = regexp.MustCompile(`^\+?[0-9]{10,15}$`)
 	if !phoneRegex.MatchString(phone) {
-		return errors.New("invalid phone number format")
+		return errors.New(InvalidPhoneErr)
 	}
 	return nil
 }

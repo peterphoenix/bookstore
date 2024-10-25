@@ -1,12 +1,13 @@
 package book
 
+//go:generate mockgen -source ./service.go -destination ../../test/mock/domain/book/service.go -package=book_mock
+
 import (
 	"context"
 
 	"bookstore/common/pagination"
 	"bookstore/domain/book/model"
 	"bookstore/domain/book/repository"
-	"bookstore/infra/database"
 )
 
 type Service interface {
@@ -19,9 +20,9 @@ type service struct {
 }
 
 func NewService(
-	db *database.PostgreSQL,
+	repo repository.Repository,
 ) Service {
 	return &service{
-		repo: repository.NewRepository(db),
+		repo: repo,
 	}
 }

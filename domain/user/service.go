@@ -1,15 +1,16 @@
 package user
 
+//go:generate mockgen -source ./service.go -destination ../../test/mock/domain/user/service.go -package=user_mock
+
 import (
 	"context"
 
 	"bookstore/domain/user/model"
 	"bookstore/domain/user/repository"
-	"bookstore/infra/database"
 )
 
 type Service interface {
-	CreateUser(ctx context.Context, req model.UserCreateReq) (model.UserCreateRes, error)
+	CreateUser(ctx context.Context, req model.CreateUserReq) (model.CreateUserRes, error)
 }
 
 type service struct {
@@ -17,9 +18,9 @@ type service struct {
 }
 
 func NewService(
-	db *database.PostgreSQL,
+	repo repository.Repository,
 ) Service {
 	return &service{
-		repo: repository.NewRepository(db),
+		repo: repo,
 	}
 }

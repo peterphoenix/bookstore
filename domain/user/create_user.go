@@ -8,10 +8,10 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (s *service) CreateUser(ctx context.Context, req model.UserCreateReq) (model.UserCreateRes, error) {
+func (s *service) CreateUser(ctx context.Context, req model.CreateUserReq) (model.CreateUserRes, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return model.UserCreateRes{}, err
+		return model.CreateUserRes{}, err
 	}
 	id := uuid.NewString()
 
@@ -28,10 +28,10 @@ func (s *service) CreateUser(ctx context.Context, req model.UserCreateReq) (mode
 		Country:        req.Country,
 	})
 	if err != nil {
-		return model.UserCreateRes{}, err
+		return model.CreateUserRes{}, err
 	}
 
-	return model.UserCreateRes{
+	return model.CreateUserRes{
 		ID:    id,
 		Email: req.Email,
 		Name:  req.Name,
