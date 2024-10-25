@@ -63,9 +63,9 @@ func Serve(cfg *config.Config, handler http.Handler) {
 		}
 	}()
 	log.Printf("listening to port :%d", cfg.Port)
-	log.Printf(fmt.Sprintf("swagger can be accessed at: %s/swagger/index.html", cfg.BaseURL))
+	log.Printf("swagger can be accessed at: %s/swagger/index.html", cfg.BaseURL)
 
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	log.Println("shutting down server...")

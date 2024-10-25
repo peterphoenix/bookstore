@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"net/http"
-	"time"
 
 	"bookstore/common/contextutil"
 	"bookstore/common/header"
@@ -136,35 +135,16 @@ func (h *handler) GetOrderHistory(w http.ResponseWriter, r *http.Request) {
 	}
 	ctx = contextutil.WithUserID(ctx, userId)
 
-	startTime := time.Time{}
-	endTime := time.Time{}
-
 	startTimeStr := r.URL.Query().Get("startTime")
-	if startTimeStr != "" {
-		t, err := timeutil.ParseTime(startTimeStr)
-		startTime = t
-		if err != nil {
-			respond.Error(w, ctx, respond.APIError{
-				Code: respond.CodeInvalidRequest,
-				Desc: err.Error(),
-			}, http.StatusBadRequest)
-
-			return
-		}
-	}
-
 	endTimeStr := r.URL.Query().Get("endTime")
-	if endTimeStr != "" {
-		t, err := timeutil.ParseTime(endTimeStr)
-		endTime = t
-		if err != nil {
-			respond.Error(w, ctx, respond.APIError{
-				Code: respond.CodeInvalidRequest,
-				Desc: err.Error(),
-			}, http.StatusBadRequest)
+	startTime, endTime, err := timeutil.ParseStartTimeAndEndTime(startTimeStr, endTimeStr)
+	if err != nil {
+		respond.Error(w, ctx, respond.APIError{
+			Code: respond.CodeInvalidRequest,
+			Desc: err.Error(),
+		}, http.StatusBadRequest)
 
-			return
-		}
+		return
 	}
 
 	orderDetails, err := h.OrderSvc.GetOrderHistory(ctx, model.GetOrderHistoryFilter{

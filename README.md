@@ -16,3 +16,6 @@ Run `swag init` to generate the Swagger documentation from the codes
 go test ./... -coverprofile=cover.out
 go tool cover -html=cover.out -o cover.html
 ```
+
+## Run Linter
+`golangci-lint run`
